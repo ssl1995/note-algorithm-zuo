@@ -1,0 +1,13 @@
+目录1：/Users/ssl/code/note-algorithm-zuo/ppt
+目录2：/Users/ssl/code/note-algorithm-zuo/src
+上述目录1是课件的PPT或者PDF，目录2是对应课件的代码
+
+这套学习的代码，是左程云在哔哩哔哩上免费分享的课和对应的代码
+1、请扫描课件和代码，分析质量和难度怎么样？
+2、除了日常力扣Top100以外，我想作为算法学习的补充，怎么样？
+输出一份分析文档
+
+回复采用中文
+文档格式：markdown，文档命名方式：月-日-时-分 文件名
+需要复制进飞书文档，注意文档不能有空行或者换行，相关流程图采用mermaid语法，尽量清晰明了
+文档保存地址：/Users/ssl/code/note-algorithm-zuo/docs
