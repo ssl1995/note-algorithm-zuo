@@ -30,7 +30,6 @@ rebel-remote.xml
 
 # uniform version management
 *.flattened-pom.xml
-/docs
 /.vscode
 /.cursor/plans
 
