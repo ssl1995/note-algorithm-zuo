@@ -1,6 +1,12 @@
 package class193;
 
 // 圆桌骑士，java版
+// 一共n个骑士，有m条厌恶关系，每条厌恶关系代表两个骑士互相讨厌对方
+// 你可以任选骑士参加圆桌会议，但是厌恶关系的骑士无法在圆桌中相邻
+// 圆桌会议的骑士数量必须是大于1的奇数，以防止赞同票和反对票一样多
+// 也许有的骑士，不管怎么安排都无法参加圆桌会议，打印这个数量
+// 1 <= n <= 10^3
+// 1 <= m <= 10^6
 // 测试链接 : https://www.luogu.com.cn/problem/SP2878
 // 测试链接 : https://www.spoj.com/problems/KNIGHTS/
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有测试用例
@@ -10,7 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-public class Code09_RoundTable1 {
+public class Code08_RoundTable1 {
 
 	public static int MAXN = 1001;
 	public static int MAXM = 1000001;
@@ -35,15 +41,15 @@ public class Code09_RoundTable1 {
 	public static int idx;
 	public static int vbccCnt;
 
+	public static boolean[] curVbcc = new boolean[MAXN];
 	public static int[] color = new int[MAXN];
-	public static boolean[] block = new boolean[MAXN];
-	public static boolean[] keep = new boolean[MAXN];
+	public static boolean[] ok = new boolean[MAXN];
 
 	public static void prepare() {
 		cntg = cntd = top = idx = vbccCnt = 0;
 		for (int i = 1; i <= n; i++) {
 			head[i] = dfn[i] = low[i] = 0;
-			keep[i] = false;
+			ok[i] = false;
 			for (int j = 1; j <= n; j++) {
 				hate[i][j] = false;
 			}
@@ -56,19 +62,13 @@ public class Code09_RoundTable1 {
 		head[u] = cntg;
 	}
 
-	public static void tarjan(int u, boolean root) {
+	public static void tarjan(int u) {
 		dfn[u] = low[u] = ++cntd;
 		sta[++top] = u;
-		if (root && head[u] == 0) {
-			vbccCnt++;
-			vbccArr[++idx] = u;
-			vbccl[vbccCnt] = vbccr[vbccCnt] = idx;
-			return;
-		}
 		for (int e = head[u]; e > 0; e = nxt[e]) {
 			int v = to[e];
 			if (dfn[v] == 0) {
-				tarjan(v, false);
+				tarjan(v);
 				low[u] = Math.min(low[u], low[v]);
 				if (low[v] >= dfn[u]) {
 					vbccCnt++;
@@ -87,17 +87,17 @@ public class Code09_RoundTable1 {
 		}
 	}
 
-	public static boolean dfs(int u, int c) {
+	// u表示当前节点，c表示当前分配给u节点的颜色，只有1和2两种颜色
+	// 返回是否发现了节点数量为奇数的环
+	public static boolean oddLoop(int u, int c) {
 		color[u] = c;
 		for (int e = head[u]; e > 0; e = nxt[e]) {
 			int v = to[e];
-			if (block[v]) {
-				if (color[v] == 0) {
-					if (dfs(v, c == 1 ? 2 : 1)) {
-						return true;
-					}
-				}
+			if (curVbcc[v]) {
 				if (color[v] == c) {
+					return true;
+				}
+				if (color[v] == 0 && oddLoop(v, c == 1 ? 2 : 1)) {
 					return true;
 				}
 			}
@@ -108,18 +108,18 @@ public class Code09_RoundTable1 {
 	public static int compute() {
 		for (int i = 1; i <= vbccCnt; i++) {
 			for (int j = vbccl[i]; j <= vbccr[i]; j++) {
+				curVbcc[vbccArr[j]] = true;
 				color[vbccArr[j]] = 0;
-				block[vbccArr[j]] = true;
 			}
-			boolean odd = dfs(vbccArr[vbccl[i]], 1);
+			boolean check = oddLoop(vbccArr[vbccl[i]], 1);
 			for (int j = vbccl[i]; j <= vbccr[i]; j++) {
-				keep[vbccArr[j]] |= odd;
-				block[vbccArr[j]] = false;
+				curVbcc[vbccArr[j]] = false;
+				ok[vbccArr[j]] |= check;
 			}
 		}
 		int ans = 0;
 		for (int i = 1; i <= n; i++) {
-			if (!keep[i]) {
+			if (!ok[i]) {
 				ans++;
 			}
 		}
@@ -149,7 +149,7 @@ public class Code09_RoundTable1 {
 			}
 			for (int i = 1; i <= n; i++) {
 				if (dfn[i] == 0) {
-					tarjan(i, true);
+					tarjan(i);
 				}
 			}
 			int ans = compute();

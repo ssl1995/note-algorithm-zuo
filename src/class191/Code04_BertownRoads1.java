@@ -1,6 +1,12 @@
 package class191;
 
 // 贝尔敦道路，java版
+// 给定一张无向图，一共n个点、m条边，保证所有点连通
+// 每条无向边需要指定一个方向，变成有向边，还要保证任意两点互相可达
+// 如果不存在方案打印0，如果存在方案，打印m条有向边
+// 可以任意次序打印有向边，如果方案不只一种，打印其中一种即可
+// 1 <= n <= 10^5
+// 1 <= m <= 3 * 10^5
 // 测试链接 : https://www.luogu.com.cn/problem/CF118E
 // 测试链接 : https://codeforces.com/problemset/problem/118/E
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有测试用例
@@ -26,8 +32,8 @@ public class Code04_BertownRoads1 {
 	public static int cntd;
 
 	public static boolean check;
-	public static int[] a = new int[MAXM];
-	public static int[] b = new int[MAXM];
+	public static int[] ans1 = new int[MAXM];
+	public static int[] ans2 = new int[MAXM];
 	public static int cnta;
 
 	public static void addEdge(int u, int v) {
@@ -45,8 +51,9 @@ public class Code04_BertownRoads1 {
 			int v = to[e];
 			// 树边和回边需要处理，弃边不要处理
 			if (dfn[v] == 0 || dfn[v] < dfn[u]) {
-				a[++cnta] = u;
-				b[cnta] = v;
+				cnta++;
+				ans1[cnta] = u;
+				ans2[cnta] = v;
 			}
 			if (dfn[v] == 0) {
 				tarjan(v, e);
@@ -77,8 +84,8 @@ public class Code04_BertownRoads1 {
 		if (!check) {
 			out.println(0);
 		} else {
-			for (int i = 1; i <= cnta; i++) {
-				out.println(a[i] + " " + b[i]);
+			for (int i = 1; i <= m; i++) {
+				out.println(ans1[i] + " " + ans2[i]);
 			}
 		}
 		out.flush();

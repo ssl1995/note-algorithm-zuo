@@ -1,6 +1,12 @@
 package class192;
 
 // 神会作弊，java版
+// 给定一张无向图，一共n个点、m条边，保证所有点连通，两点间出现重边只连一次
+// 边双连通分量缩点后，如果点x和点y属于同一个边双连通分量，认为两点距离是1
+// 如果不属于同一个边双连通分量，距离为缩点后的树上，两点简单路径上的节点个数
+// 一共有q条查询，格式 x y : 计算点x和点y的距离，打印距离的二进制形式
+// 1 <= n <= 10000
+// 1 <= m <= 50000
 // 测试链接 : https://www.luogu.com.cn/problem/P2783
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有测试用例
 
@@ -136,7 +142,7 @@ public class Code04_GodCheat1 {
 	}
 
 	public static int getDist(int x, int y) {
-		return dep[x] + dep[y] - 2 * dep[getLca(x, y)] + 1;
+		return dep[x] + dep[y] - 2 * dep[getLca(x, y)];
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -161,7 +167,7 @@ public class Code04_GodCheat1 {
 			y = in.nextInt();
 			x = belong[x];
 			y = belong[y];
-			out.println(Integer.toBinaryString(getDist(x, y)));
+			out.println(Integer.toBinaryString(getDist(x, y) + 1));
 		}
 		out.flush();
 		out.close();

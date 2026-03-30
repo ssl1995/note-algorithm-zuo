@@ -1,13 +1,21 @@
 package class193;
 
 // 夺回据点，java版
+// 一共n个据点，m条双向道路，所有据点连通在一起
+// 每个据点给定点权，代表夺取这个据点需要的花费
+// 当夺取某个据点之后，再夺取相邻的据点，认为没有花费
+// 你可以按照任意顺序夺取所有据点，但是过程中必须保证
+// 那些还没夺取的据点都在同一个连通区里，不被已经夺取的据点隔开
+// 打印最小的总花费
+// 1 <= n、m <= 10^5
+// 1 <= 点权 <= 10^9
 // 测试链接 : https://leetcode.cn/problems/s5kipK/
 // 提交以下代码中的Solution类，可以通过所有测试用例
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Code07_Recapture1 {
+public class Code06_Recapture1 {
 
 	class Solution {
 
@@ -48,12 +56,6 @@ public class Code07_Recapture1 {
 		public static void tarjan(int u, boolean root) {
 			dfn[u] = low[u] = ++cntd;
 			sta[++top] = u;
-			if (root && head[u] == 0) {
-				ArrayList<Integer> list = new ArrayList<>();
-				list.add(u);
-				vbccArr.add(list);
-				return;
-			}
 			int son = 0;
 			for (int e = head[u]; e > 0; e = nxt[e]) {
 				int v = to[e];
@@ -90,11 +92,7 @@ public class Code07_Recapture1 {
 				addEdge(u, v);
 				addEdge(v, u);
 			}
-			for (int i = 1; i <= n; i++) {
-				if (dfn[i] == 0) {
-					tarjan(i, true);
-				}
-			}
+			tarjan(1, true);
 			long ans = 0;
 			if (vbccArr.size() == 1) {
 				ans = Long.MAX_VALUE;

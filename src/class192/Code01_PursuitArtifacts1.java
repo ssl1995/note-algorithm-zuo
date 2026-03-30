@@ -1,6 +1,11 @@
 package class192;
 
 // 追寻文物，java版
+// 给定一张无向图，一共n个点、m条边，保证所有点连通
+// 每条边除了端点之外，还有一个属性，值为1表示该边上有商品，值为0表示该边上无商品
+// 给定起点s和终点t，路途怎么走随意，但是沿途每条边只能经过一次
+// 从s到t的路途中能遇到商品打印"YES"，否则打印"NO"
+// 1 <= n、m <= 3 * 10^5
 // 测试链接 : https://www.luogu.com.cn/problem/CF652E
 // 测试链接 : https://codeforces.com/problemset/problem/652/E
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有测试用例
@@ -97,7 +102,7 @@ public class Code01_PursuitArtifacts1 {
 			int v = to[e];
 			int w = weight[e];
 			if (v != fa) {
-				if (check(v, u, ok || (w > 0))) {
+				if (check(v, u, ok || w > 0)) {
 					return true;
 				}
 			}

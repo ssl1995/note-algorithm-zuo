@@ -1,6 +1,12 @@
 package class193;
 
 // 点双连通分量模版题2，C++版
+// 给定一张无向图，一共n个点、m条边
+// 忽略所有孤立点，打印点双连通分量的个数
+// 打印每个点双连通分量内部的节点编号，编号按照从小到大组织
+// 内部节点编号是一个序列，序列字典序小的点双连通分量先打印
+// 1 <= n <= 5 * 10^4
+// 1 <= m <= 3 * 10^5
 // 测试链接 : https://www.luogu.com.cn/problem/B3610
 // 如下实现是C++的版本，C++版本和java版本逻辑完全一样
 // 提交如下代码，可以通过所有测试用例
@@ -28,7 +34,7 @@ package class193;
 //vector<vector<int>> vbccArr;
 //
 //bool VbccCmp(const vector<int> &o1, const vector<int> &o2) {
-//    int size = (int)min(o1.size(), o2.size());
+//    int size = min(o1.size(), o2.size());
 //    for (int i = 0; i < size; i++) {
 //        if (o1[i] != o2[i]) {
 //            return o1[i] < o2[i];
@@ -43,21 +49,15 @@ package class193;
 //    head[u] = cntg;
 //}
 //
-//void tarjan(int u, bool root) {
+//void tarjan(int u) {
 //    dfn[u] = low[u] = ++cntd;
 //    sta[++top] = u;
-//    if (root && head[u] == 0) {
-//        vector<int> list;
-//        list.push_back(u);
-//        vbccArr.push_back(list);
-//        return;
-//    }
 //    for (int e = head[u]; e > 0; e = nxt[e]) {
 //        int v = to[e];
 //        if (dfn[v] == 0) {
-//            tarjan(v, false);
+//            tarjan(v);
 //            low[u] = min(low[u], low[v]);
-//            if (low[v] >= dfn[u]) {
+//            if (low[v] == dfn[u]) {
 //                vector<int> list;
 //                list.push_back(u);
 //                int pop;
@@ -79,32 +79,24 @@ package class193;
 //    cin >> n >> m;
 //    for (int i = 1, u, v; i <= m; i++) {
 //        cin >> u >> v;
-//        if (u != v) {
-//            addEdge(u, v);
-//            addEdge(v, u);
-//        }
+//        addEdge(u, v);
+//        addEdge(v, u);
 //    }
 //    for (int i = 1; i <= n; i++) {
-//        if (dfn[i] == 0) {
-//            tarjan(i, true);
+//        if (dfn[i] == 0 && head[i] > 0) {
+//            tarjan(i);
 //        }
 //    }
-//    int ansCnt = 0;
-//    for (int i = 0; i < (int)vbccArr.size(); i++) {
-//        if ((int)vbccArr[i].size() > 1) {
-//            ansCnt++;
-//            sort(vbccArr[i].begin(), vbccArr[i].end());
-//        }
+//    cout << vbccArr.size() << "\n";
+//    for (int i = 0; i < vbccArr.size(); i++) {
+//        sort(vbccArr[i].begin(), vbccArr[i].end());
 //    }
-//    cout << ansCnt << "\n";
 //    sort(vbccArr.begin(), vbccArr.end(), VbccCmp);
-//    for (int i = 0; i < (int)vbccArr.size(); i++) {
-//        if ((int)vbccArr[i].size() > 1) {
-//            for (int node : vbccArr[i]) {
-//                cout << node << " ";
-//            }
-//            cout << "\n";
+//    for (int i = 0; i < vbccArr.size(); i++) {
+//        for (int node : vbccArr[i]) {
+//            cout << node << " ";
 //        }
+//        cout << "\n";
 //    }
 //    return 0;
 //}

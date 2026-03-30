@@ -1,6 +1,10 @@
 package class193;
 
 // 电力，java版
+// 给定一张无向图，一共n个点、m条边，不保证所有点连通
+// 点的编号0 ~ n-1，只能删除一个点的话，连通块最多有多少
+// 1 <= n <= 10^4
+// 1 <= m <= 2 * 10^4
 // 测试链接 : https://loj.ac/p/10103
 // 测试链接 : http://poj.org/problem?id=2117
 // 提交以下的code，提交时请把类名改成"Main"，可以通过所有测试用例
@@ -13,7 +17,7 @@ import java.io.PrintWriter;
 public class Code02_Electricity1 {
 
 	public static int MAXN = 10001;
-	public static int MAXM = 1000001;
+	public static int MAXM = 20001;
 	public static int n, m;
 
 	public static int[] head = new int[MAXN];
@@ -25,19 +29,20 @@ public class Code02_Electricity1 {
 	public static int[] low = new int[MAXN];
 	public static int cntd;
 
-	public static int sub, ans;
+	public static int block, ans;
 
 	// 迭代版需要的栈，讲解118讲了递归改迭代的技巧
-	public static int[][] stack = new int[MAXN][5];
-	public static int u, root, curAns, status, e;
+	public static int[][] stack = new int[MAXN][6];
+	public static int u, root, son, cut, status, e;
 	public static int stacksize;
 
-	public static void push(int u, int root, int curAns, int status, int e) {
+	public static void push(int u, int root, int son, int cut, int status, int e) {
 		stack[stacksize][0] = u;
 		stack[stacksize][1] = root;
-		stack[stacksize][2] = curAns;
-		stack[stacksize][3] = status;
-		stack[stacksize][4] = e;
+		stack[stacksize][2] = son;
+		stack[stacksize][3] = cut;
+		stack[stacksize][4] = status;
+		stack[stacksize][5] = e;
 		stacksize++;
 	}
 
@@ -45,13 +50,14 @@ public class Code02_Electricity1 {
 		stacksize--;
 		u = stack[stacksize][0];
 		root = stack[stacksize][1];
-		curAns = stack[stacksize][2];
-		status = stack[stacksize][3];
-		e = stack[stacksize][4];
+		son = stack[stacksize][2];
+		cut = stack[stacksize][3];
+		status = stack[stacksize][4];
+		e = stack[stacksize][5];
 	}
 
 	public static void prepare() {
-		cntg = cntd = sub = ans = 0;
+		cntg = cntd = block = ans = 0;
 		for (int i = 1; i <= n; i++) {
 			head[i] = dfn[i] = low[i] = 0;
 		}
@@ -66,29 +72,31 @@ public class Code02_Electricity1 {
 	// 递归版
 	public static void tarjan1(int u, boolean root) {
 		dfn[u] = low[u] = ++cntd;
-		int curAns = 1;
+		int son = 0, cut = 0;
 		for (int e = head[u]; e > 0; e = nxt[e]) {
 			int v = to[e];
 			if (dfn[v] == 0) {
+				son++;
 				tarjan1(v, false);
 				low[u] = Math.min(low[u], low[v]);
-				if (low[v] >= dfn[u]) {
-					curAns++;
+				if (low[v] >= dfn[u] && !root) {
+					cut++;
 				}
 			} else {
 				low[u] = Math.min(low[u], dfn[v]);
 			}
 		}
 		if (root) {
-			curAns--;
+			ans = Math.max(ans, son);
+		} else {
+			ans = Math.max(ans, cut + 1);
 		}
-		ans = Math.max(ans, curAns);
 	}
 
 	// 迭代版
 	public static void tarjan2(int node, boolean rt) {
 		stacksize = 0;
-		push(node, rt ? 1 : 0, 1, -1, -1);
+		push(node, rt ? 1 : 0, 0, 0, -1, -1);
 		int v;
 		while (stacksize > 0) {
 			pop();
@@ -99,8 +107,8 @@ public class Code02_Electricity1 {
 				v = to[e];
 				if (status == 0) {
 					low[u] = Math.min(low[u], low[v]);
-					if (low[v] >= dfn[u]) {
-						curAns++;
+					if (low[v] >= dfn[u] && root == 0) {
+						cut++;
 					}
 				} else {
 					low[u] = Math.min(low[u], dfn[v]);
@@ -110,16 +118,18 @@ public class Code02_Electricity1 {
 			if (e != 0) {
 				v = to[e];
 				if (dfn[v] == 0) {
-					push(u, root, curAns, 0, e);
-					push(v, 0, 1, -1, -1);
+					son++;
+					push(u, root, son, cut, 0, e);
+					push(v, 0, 0, 0, -1, -1);
 				} else {
-					push(u, root, curAns, 1, e);
+					push(u, root, son, cut, 1, e);
 				}
 			} else {
 				if (root == 1) {
-					curAns--;
+					ans = Math.max(ans, son);
+				} else {
+					ans = Math.max(ans, cut + 1);
 				}
-				ans = Math.max(ans, curAns);
 			}
 		}
 	}
@@ -141,12 +151,12 @@ public class Code02_Electricity1 {
 			}
 			for (int i = 1; i <= n; i++) {
 				if (dfn[i] == 0) {
-					sub++;
+					block++;
 					// tarjan1(i, true);
 					tarjan2(i, true);
 				}
 			}
-			out.println(sub - 1 + ans);
+			out.println(block + (ans - 1));
 			n = in.nextInt();
 			m = in.nextInt();
 		}
