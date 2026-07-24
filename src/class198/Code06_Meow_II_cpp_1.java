@@ -1,0 +1,230 @@
+package class198;
+
+// 喵了个喵 II，树状数组优化建图，C++版
+// 给定一个长度为4n的数组arr，1~n每种数字都出现4次
+// 从左到右把每个数字划分进序列0或序列1，要求划分出的两个序列完全相等
+// 如果能做到，先打印"Yes"，然后从左到右打印每个位置划分进了什么序列
+// 如果不能做到，打印"No"
+// 1 <= n <= 5 * 10^4
+// 测试链接 : https://www.luogu.com.cn/problem/P9139
+// 如下实现是C++的版本，C++版本和java版本逻辑完全一样
+// 提交如下代码，可以通过所有测试用例
+
+//#include <bits/stdc++.h>
+//
+//using namespace std;
+//
+//struct Node {
+//    int v, i;
+//};
+//
+//bool NodeCmp(Node a, Node b) {
+//    if (a.v != b.v) {
+//        return a.v < b.v;
+//    }
+//    return a.i < b.i;
+//}
+//
+//struct Group {
+//    int l, r, x;
+//};
+//
+//bool GroupCmp(Group a, Group b) {
+//    return a.r < b.r;
+//}
+//
+//const int MAXV = 50001;
+//const int MAXN = 200001;
+//const int MAXT = 5000001;
+//const int MAXE = 20000001;
+//int v, n, cntt;
+//
+//Node vi[MAXN];
+//Group group[MAXN];
+//int cntp;
+//
+//int head[MAXT];
+//int nxt[MAXE];
+//int to[MAXE];
+//int cntg;
+//
+//int dfn[MAXT];
+//int low[MAXT];
+//int cntd;
+//
+//int sta[MAXT];
+//int top;
+//
+//int belong[MAXT];
+//int sccCnt;
+//
+//int outTree[MAXN];
+//int inTree[MAXN];
+//
+//int ans[MAXN];
+//
+//void addEdge(int u, int v) {
+//    nxt[++cntg] = head[u];
+//    to[cntg] = v;
+//    head[u] = cntg;
+//}
+//
+//void tarjan(int u) {
+//    dfn[u] = low[u] = ++cntd;
+//    sta[++top] = u;
+//    for (int e = head[u]; e > 0; e = nxt[e]) {
+//        int v = to[e];
+//        if (dfn[v] == 0) {
+//            tarjan(v);
+//            low[u] = min(low[u], low[v]);
+//        } else {
+//            if (belong[v] == 0) {
+//                low[u] = min(low[u], dfn[v]);
+//            }
+//        }
+//    }
+//    if (dfn[u] == low[u]) {
+//        sccCnt++;
+//        int pop;
+//        do {
+//            pop = sta[top--];
+//            belong[pop] = sccCnt;
+//        } while (pop != u);
+//    }
+//}
+//
+//int lowbit(int i) {
+//    return i & -i;
+//}
+//
+//void addOut(int i, int x) {
+//    while (i <= n) {
+//        int preo = outTree[i];
+//        int curo = ++cntt;
+//        if (preo > 0) {
+//            addEdge(preo, curo);
+//        }
+//        addEdge(x, curo);
+//        outTree[i] = curo;
+//        i += lowbit(i);
+//    }
+//}
+//
+//void addIn(int i, int x) {
+//    while (i <= n) {
+//        int prei = inTree[i];
+//        int curi = ++cntt;
+//        if (prei > 0) {
+//            addEdge(curi, prei);
+//        }
+//        addEdge(curi, x);
+//        inTree[i] = curi;
+//        i += lowbit(i);
+//    }
+//}
+//
+//void rangeToX(int i, int x) {
+//    while (i > 0) {
+//        if (outTree[i] > 0) {
+//            addEdge(outTree[i], x);
+//        }
+//        i -= lowbit(i);
+//    }
+//}
+//
+//void xToRange(int x, int i) {
+//    while (i > 0) {
+//        if (inTree[i] > 0) {
+//            addEdge(x, inTree[i]);
+//        }
+//        i -= lowbit(i);
+//    }
+//}
+//
+//int other(int x) {
+//    return x <= v ? x + v : x - v;
+//}
+//
+//void buildGraph() {
+//    sort(group + 1, group + cntp + 1, GroupCmp);
+//    cntt = v << 1;
+//    for (int i = 1; i <= cntp; i++) {
+//        int l = group[i].l;
+//        int p = n - l + 1;
+//        int x = group[i].x;
+//        xToRange(x, p);
+//        rangeToX(p, other(x));
+//        addIn(p, other(x));
+//        addOut(p, x);
+//    }
+//}
+//
+//bool compute() {
+//    sort(vi + 1, vi + n + 1, NodeCmp);
+//    for (int i = 1; i <= n; i += 4) {
+//        int x = vi[i].v;
+//        int a = vi[i].i;
+//        int b = vi[i + 1].i;
+//        int c = vi[i + 2].i;
+//        int d = vi[i + 3].i;
+//        group[++cntp] = { a, c, x };
+//        group[++cntp] = { b, d, x };
+//        group[++cntp] = { a, b, x + v };
+//        group[++cntp] = { c, d, x + v };
+//    }
+//    buildGraph();
+//    for (int i = 1; i <= v << 1; i++) {
+//        if (dfn[i] == 0) {
+//            tarjan(i);
+//        }
+//    }
+//    bool check = true;
+//    for (int i = 1; i <= v; i++) {
+//        if (belong[i] == belong[i + v]) {
+//            check = false;
+//            break;
+//        }
+//    }
+//    if (check) {
+//        for (int i = 1; i <= n; i += 4) {
+//            int x = vi[i].v;
+//            int a = vi[i].i;
+//            int b = vi[i + 1].i;
+//            int c = vi[i + 2].i;
+//            int d = vi[i + 3].i;
+//            if (belong[x] < belong[x + v]) {
+//                ans[a] = 0;
+//                ans[b] = 0;
+//                ans[c] = 1;
+//                ans[d] = 1;
+//            } else {
+//                ans[a] = 0;
+//                ans[b] = 1;
+//                ans[c] = 0;
+//                ans[d] = 1;
+//            }
+//        }
+//    }
+//    return check;
+//}
+//
+//int main() {
+//    ios::sync_with_stdio(false);
+//    cin.tie(nullptr);
+//    cin >> v;
+//    n = v << 2;
+//    for (int i = 1; i <= n; i++) {
+//        cin >> vi[i].v;
+//        vi[i].i = i;
+//    }
+//    bool check = compute();
+//    if (check) {
+//        cout << "Yes" << "\n";
+//        for (int i = 1; i <= n; i++) {
+//            cout << ans[i];
+//        }
+//    } else {
+//        cout << "No" << "\n";
+//    }
+//    return 0;
+//}

@@ -3,8 +3,8 @@ package class195;
 // 逛森林，java版
 // 一共n个点，给定出发点s，初始时没有边，一共m条操作，操作类型有两种
 // 操作 1 a b c d w : 如果点a和点b不连通，或者点c和点d不连通，忽略该操作
-//   点a到点b路径上的任何一点，可以花费w的代价，传送到点c到点d路径上的任何一点
-//   该操作是单向传送，不代表加边，判断连通性只考虑2类型的操作加入的边
+//       点a到点b路径上的任何一点，可以花费w的代价，传送到点c到点d路径上的任何一点
+//       该操作是单向传送，不代表加边，判断连通性只考虑2类型的操作加入的边
 // 操作 2 u v w : 点u和点v如果已经连通，忽略该操作，否则增加一条边权为w的无向边
 // 完成m条操作后，打印从s点出发，到每个节点的最小花费，到达不了的节点打印-1
 // 1 <= n <= 5 * 10^4    1 <= m <= 10^6    1 <= w <= 100
@@ -30,6 +30,7 @@ public class Code08_Forest1 {
 	public static int INF = 1 << 30;
 	public static int n, m, s;
 
+	// 操作1记录一下，只记录应该发生的操作1
 	public static int[] u1 = new int[MAXM];
 	public static int[] v1 = new int[MAXM];
 	public static int[] u2 = new int[MAXM];
@@ -37,25 +38,30 @@ public class Code08_Forest1 {
 	public static int[] weight = new int[MAXM];
 	public static int cntq;
 
+	// 操作2建立的树
 	public static int[] head1 = new int[MAXN];
 	public static int[] next1 = new int[MAXN << 1];
 	public static int[] to1 = new int[MAXN << 1];
 	public static int cnt1;
 
+	// 操作1 + 操作2 建立的图
 	public static int[] head2 = new int[MAXT];
 	public static int[] next2 = new int[MAXE];
 	public static int[] to2 = new int[MAXE];
 	public static int[] weight2 = new int[MAXE];
 	public static int cnt2;
 
+	// 并查集
 	public static int[] father = new int[MAXN];
 
+	// 树上倍增
 	public static int[] dep = new int[MAXN];
 	public static int[][] stjump = new int[MAXN][MAXP];
 	public static int[][] stout = new int[MAXN][MAXP];
 	public static int[][] stin = new int[MAXN][MAXP];
 	public static int cntt;
 
+	// dijkstra算法
 	public static int[] dist = new int[MAXT];
 	public static boolean[] vis = new boolean[MAXT];
 	public static PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
@@ -161,11 +167,11 @@ public class Code08_Forest1 {
 	}
 
 	public static void pathToPath(int a, int b, int c, int d, int w) {
-		int vout = ++cntt;
-		int vin = ++cntt;
-		pathOut(a, b, vout);
-		pathIn(c, d, vin);
-		addEdge2(vout, vin, w);
+		int x = ++cntt;
+		int y = ++cntt;
+		pathOut(a, b, x);
+		pathIn(c, d, y);
+		addEdge2(x, y, w);
 	}
 
 	public static void dijkstra() {

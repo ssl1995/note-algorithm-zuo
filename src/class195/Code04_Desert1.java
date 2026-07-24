@@ -39,8 +39,8 @@ public class Code04_Desert1 {
 	public static int cntt;
 
 	public static int[] val = new int[MAXT];
+	public static int[] atMost = new int[MAXT];
 	public static int[] indegree = new int[MAXT];
-	public static int[] dist = new int[MAXT];
 	public static int[] que = new int[MAXT];
 
 	public static void addEdge(int u, int v, int w) {
@@ -89,19 +89,16 @@ public class Code04_Desert1 {
 			if (indegree[i] == 0) {
 				que[++qsiz] = i;
 			}
-			dist[i] = val[i] > 0 ? val[i] : LIMIT;
+			atMost[i] = val[i] == 0 ? LIMIT : val[i];
 		}
 		while (qi <= qsiz) {
 			int u = que[qi++];
-			if (dist[u] < 1) {
-				return false;
-			}
 			for (int e = head[u]; e > 0; e = nxt[e]) {
 				int v = to[e];
 				int w = weight[e];
-				if (dist[v] > dist[u] + w) {
-					dist[v] = dist[u] + w;
-					if (val[v] != 0 && dist[v] < val[v]) {
+				if (atMost[v] > atMost[u] + w) {
+					atMost[v] = atMost[u] + w;
+					if ((val[v] != 0 && atMost[v] < val[v]) || atMost[v] < 1) {
 						return false;
 					}
 				}
@@ -143,7 +140,7 @@ public class Code04_Desert1 {
 		if (check) {
 			out.println("TAK");
 			for (int i = 1; i <= n; i++) {
-				out.print(dist[i] + " ");
+				out.print(atMost[i] + " ");
 			}
 			out.println();
 		} else {

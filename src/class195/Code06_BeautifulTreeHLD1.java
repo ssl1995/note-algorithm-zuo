@@ -2,7 +2,7 @@ package class195;
 
 // 美丽的树，树剖优化建图，java版
 // 一共n个节点，给定n-1条无向边，所有节点组成一棵树，1号节点是根
-// 你需要根据一共m条关系，给每个节点赋值，关系的具体格式如下
+// 你需要给每个节点赋值，但是不能破坏如下的m条关系，关系的格式如下
 // 关系 1 a b c : 节点a到节点b的路径上，值最小的节点必须是节点c，输入保证c一定在路径上
 // 关系 2 a b c : 节点a到节点b的路径上，值最大的节点必须是节点c，输入保证c一定在路径上
 // 如果存在赋值方案，并且这些值是1到n的一个排列，打印一种方案即可，否则打印-1
@@ -23,22 +23,26 @@ public class Code06_BeautifulTreeHLD1 {
 	public static int MAXE = MAXN * 50;
 	public static int n, m;
 
+	// 原始的树
 	public static int[] head1 = new int[MAXN];
 	public static int[] next1 = new int[MAXN << 1];
 	public static int[] to1 = new int[MAXN << 1];
 	public static int cnt1;
 
+	// 关系图，x -> y，x的值严格小于y
 	public static int[] indegree = new int[MAXT];
 	public static int[] head2 = new int[MAXT];
 	public static int[] next2 = new int[MAXE];
 	public static int[] to2 = new int[MAXE];
 	public static int cnt2;
 
+	// 线段树优化建图，出树和入树
 	public static int[] ls = new int[MAXT];
 	public static int[] rs = new int[MAXT];
 	public static int rootOut, rootIn;
 	public static int cntt;
 
+	// 树链剖分
 	public static int[] fa = new int[MAXN];
 	public static int[] dep = new int[MAXN];
 	public static int[] siz = new int[MAXN];
@@ -48,6 +52,7 @@ public class Code06_BeautifulTreeHLD1 {
 	public static int[] seg = new int[MAXN];
 	public static int cntd;
 
+	// 拓扑排序
 	public static int[] que = new int[MAXT];
 	public static int[] ans = new int[MAXN];
 
@@ -201,7 +206,7 @@ public class Code06_BeautifulTreeHLD1 {
 		int val = 0;
 		while (qi <= qsiz) {
 			int u = que[qi++];
-			if (u >= 1 && u <= n) {
+			if (u <= n) {
 				ans[seg[u]] = ++val;
 			}
 			for (int e = head2[u]; e > 0; e = next2[e]) {
