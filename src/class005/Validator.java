@@ -52,9 +52,7 @@ public class Validator {
 	public static int[] copyArray(int[] arr) {
 		int n = arr.length;
 		int[] ans = new int[n];
-		for (int i = 0; i < n; i++) {
-			ans[i] = arr[i];
-		}
+    System.arraycopy(arr, 0, ans, 0, n);
 		return ans;
 	}
 
