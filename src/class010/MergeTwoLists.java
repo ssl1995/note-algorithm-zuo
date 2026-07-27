@@ -5,45 +5,71 @@ package class010;
 // 测试链接 : https://leetcode.cn/problems/merge-two-sorted-lists/
 public class MergeTwoLists {
 
-	// 不要提交这个类
-	public static class ListNode {
-		public int val;
-		public ListNode next;
+  // 不要提交这个类
+  public static class ListNode {
+    public int val;
+    public ListNode next;
 
-		public ListNode(int val) {
-			this.val = val;
-		}
+    public ListNode(int val) {
+      this.val = val;
+    }
 
-		public ListNode(int val, ListNode next) {
-			this.val = val;
-			this.next = next;
-		}
-	}
+    public ListNode(int val, ListNode next) {
+      this.val = val;
+      this.next = next;
+    }
+  }
 
-	class Solution {
+  class Solution {
 
-		public static ListNode mergeTwoLists(ListNode head1, ListNode head2) {
-			if (head1 == null || head2 == null) {
-				return head1 == null ? head2 : head1;
-			}
-			ListNode head = head1.val <= head2.val ? head1 : head2;
-			ListNode cur1 = head.next;
-			ListNode cur2 = head == head1 ? head2 : head1;
-			ListNode pre = head;
-			while (cur1 != null && cur2 != null) {
-				if (cur1.val <= cur2.val) {
-					pre.next = cur1;
-					cur1 = cur1.next;
-				} else {
-					pre.next = cur2;
-					cur2 = cur2.next;
-				}
-				pre = pre.next;
-			}
-			pre.next = cur1 != null ? cur1 : cur2;
-			return head;
-		}
+    public static ListNode mergeTwoLists(ListNode head1, ListNode head2) {
+      if (head1 == null || head2 == null) {
+        return head1 == null ? head2 : head1;
+      }
+      ListNode head = head1.val <= head2.val ? head1 : head2;
+      ListNode cur1 = head.next;
+      ListNode cur2 = head == head1 ? head2 : head1;
+      ListNode pre = head;
+      while (cur1 != null && cur2 != null) {
+        if (cur1.val <= cur2.val) {
+          pre.next = cur1;
+          cur1 = cur1.next;
+        } else {
+          pre.next = cur2;
+          cur2 = cur2.next;
+        }
+        pre = pre.next;
+      }
+      pre.next = cur1 != null ? cur1 : cur2;
+      return head;
+    }
 
-	}
+    public ListNode mergeTwoLists1(ListNode list1, ListNode list2) {
+      if (list1 == null) {
+        return list2;
+      }
+      if (list2 == null) {
+        return list1;
+      }
+
+      ListNode dummy = new ListNode(-1);
+      ListNode cur = dummy;
+      while (list1 != null && list2 != null) {
+        if (list1.val < list2.val) {
+          cur.next = list1;
+          list1 = list1.next;
+        } else {
+          cur.next = list2;
+          list2 = list2.next;
+        }
+        cur = cur.next;
+      }
+
+      cur.next = (list1 == null) ? list2 : list1;
+
+      return dummy.next;
+    }
+
+  }
 
 }

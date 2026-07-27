@@ -6,55 +6,59 @@ package class012;
 // 测试链接 : https://leetcode.cn/problems/partition-list/
 public class PartitionList {
 
-	// 不要提交这个类
-	public static class ListNode {
-		public int val;
-		public ListNode next;
+  // 不要提交这个类
+  public static class ListNode {
+    public int val;
+    public ListNode next;
 
-		public ListNode(int val) {
-			this.val = val;
-		}
+    public ListNode(int val) {
+      this.val = val;
+    }
 
-		public ListNode(int val, ListNode next) {
-			this.val = val;
-			this.next = next;
-		}
-	}
+    public ListNode(int val, ListNode next) {
+      this.val = val;
+      this.next = next;
+    }
+  }
 
-	class Solution {
+  class Solution {
 
-		public static ListNode partition(ListNode head, int x) {
-			ListNode leftHead = null, leftTail = null; // < x的区域
-			ListNode rightHead = null, rightTail = null; // >=x的区域
-			ListNode next = null;
-			while (head != null) {
-				next = head.next;
-				head.next = null;
-				if (head.val < x) {
-					if (leftHead == null) {
-						leftHead = head;
-					} else {
-						leftTail.next = head;
-					}
-					leftTail = head;
-				} else {
-					if (rightHead == null) {
-						rightHead = head;
-					} else {
-						rightTail.next = head;
-					}
-					rightTail = head;
-				}
-				head = next;
-			}
-			if (leftHead == null) {
-				return rightHead;
-			}
-			// < x的区域有内容！
-			leftTail.next = rightHead;
-			return leftHead;
-		}
+    public static ListNode partition(ListNode head, int x) {
+      ListNode leftHead = null, leftTail = null; // < x的区域
+      ListNode rightHead = null, rightTail = null; // >=x的区域
+      ListNode cur = head;
+      ListNode next;
+      while (cur != null) {
+        next = cur.next;
+        cur.next = null;
 
-	}
+        if (cur.val < x) {
+          if (leftHead == null) {
+            leftHead = cur;
+          } else {
+            leftTail.next = cur;
+          }
+          leftTail = cur;
+        } else {
+          if (rightHead == null) {
+            rightHead = cur;
+          } else {
+            rightTail.next = cur;
+          }
+          rightTail = cur;
+        }
+
+        cur = next;
+      }
+      // 没有<x的区域
+      if (leftHead == null) {
+        return rightHead;
+      }
+      // 有<x的区域，先连接大的区域，再返回
+      leftTail.next = rightHead;
+      return leftHead;
+    }
+
+  }
 
 }
