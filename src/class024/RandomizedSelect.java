@@ -31,7 +31,7 @@ public class RandomizedSelect {
 		return ans;
 	}
 
-	// 荷兰国旗问题
+	// 荷兰国旗问题:左闭右闭
 	public static int first, last;
 
 	public static void partition(int[] arr, int l, int r, int x) {
