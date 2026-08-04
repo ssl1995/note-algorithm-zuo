@@ -35,15 +35,21 @@ public class Code04_InsertDeleteRandomDuplicatesAllowed {
 			HashSet<Integer> valSet = map.get(val);
 			int valAnyIndex = valSet.iterator().next();
 			int endValue = arr.get(arr.size() - 1);
+
+			// 删除=末尾
 			if (val == endValue) {
+				// 只删除集合的末尾就行
 				valSet.remove(arr.size() - 1);
 			} else {
+				// 删除！=末尾
 				HashSet<Integer> endValueSet = map.get(endValue);
 				endValueSet.add(valAnyIndex);
+
 				arr.set(valAnyIndex, endValue);
 				endValueSet.remove(arr.size() - 1);
 				valSet.remove(valAnyIndex);
 			}
+
 			arr.remove(arr.size() - 1);
 			if (valSet.isEmpty()) {
 				map.remove(val);
