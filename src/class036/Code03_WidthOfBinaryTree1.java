@@ -30,13 +30,16 @@ public class Code03_WidthOfBinaryTree1 {
 		while (l < r) {
 			int size = r - l;
 			ans = Math.max(ans, (int) (iq[r - 1] - iq[l] + 1));
+
 			for (int i = 0; i < size; i++) {
 				TreeNode node = nq[l];
 				long id = iq[l++];
+
 				if (node.left != null) {
 					nq[r] = node.left;
 					iq[r++] = id * 2;
 				}
+
 				if (node.right != null) {
 					nq[r] = node.right;
 					iq[r++] = id * 2 + 1;
