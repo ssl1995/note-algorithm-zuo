@@ -82,24 +82,6 @@ public class NQueens {
 		// 一共有多少有效的方法
 		int ans = 0;
 		while (candidate != 0) {
-			// 提取出最右侧的1
-			// 0 0 1 1 1 0
-			// 5 4 3 2 1 0
-			// place : 
-			// 0 0 0 0 1 0
-			// candidate : 
-			// 0 0 1 1 0 0
-			// 5 4 3 2 1 0
-			// place : 
-			// 0 0 0 1 0 0
-			// candidate : 
-			// 0 0 1 0 0 0
-			// 5 4 3 2 1 0
-			// place : 
-			// 0 0 1 0 0 0
-			// candidate : 
-			// 0 0 0 0 0 0
-			// 5 4 3 2 1 0
 			place = candidate & (-candidate);
 			candidate ^= place;
 			ans += f2(limit, col | place, (left | place) >> 1, (right | place) << 1);
