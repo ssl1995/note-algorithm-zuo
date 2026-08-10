@@ -20,11 +20,14 @@ public class Code03_IsSumOfConsecutiveNumbers {
 	}
 
 	public static boolean is2(int num) {
+		// 是2的某次方=false
+//		return (num & (num - 1)) == 0 ? false : true;
 		return (num & (num - 1)) != 0;
 	}
 
 	public static void main(String[] args) {
 		for (int num = 1; num < 200; num++) {
+			// 暴力法，找规律-> 2的某次方不能表示成连续正整数的和
 			System.out.println(num + " : " + (is1(num) ? "T" : "F"));
 		}
 	}
