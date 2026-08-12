@@ -13,86 +13,88 @@ import java.util.Arrays;
 // 测试链接 : https://www.nowcoder.com/practice/c552d3b4dfda49ccb883a6371d9a6932
 public class Code01_CountConsistentKeys {
 
-	public static int[] countConsistentKeys(int[][] b, int[][] a) {
-		build();
-		StringBuilder builder = new StringBuilder();
-		// [3,6,50,10] -> "3#44#-40#"
-		for (int[] nums : a) {
-			builder.setLength(0);
-			for (int i = 1; i < nums.length; i++) {
-				builder.append(String.valueOf(nums[i] - nums[i - 1]) + "#");
-			}
-			insert(builder.toString());
-		}
-		int[] ans = new int[b.length];
-		for (int i = 0; i < b.length; i++) {
-			builder.setLength(0);
-			int[] nums = b[i];
-			for (int j = 1; j < nums.length; j++) {
-				builder.append(String.valueOf(nums[j] - nums[j - 1]) + "#");
-			}
-			ans[i] = count(builder.toString());
-		}
-		clear();
-		return ans;
-	}
+  public static int[] countConsistentKeys(int[][] b, int[][] a) {
+    build();
+    StringBuilder builder = new StringBuilder();
+    // 1、建立a前缀树，注意，[3,6,50,10] -> 差值以#结尾，"3#44#-40#"
+    for (int[] nums : a) {
+      builder.setLength(0);
+      for (int i = 1; i < nums.length; i++) {
+        builder.append(nums[i] - nums[i - 1]).append("#");
+      }
+      insert(builder.toString());
+    }
+    int[] ans = new int[b.length];
+    // 2、问题b是a的前缀有多少个
+    for (int i = 0; i < b.length; i++) {
+      builder.setLength(0);
+      int[] nums = b[i];
+      for (int j = 1; j < nums.length; j++) {
+        builder.append(nums[j] - nums[j - 1]).append("#");
+      }
+      // 3、问题是b是a的前缀，查找b字符在a前缀树中存在的多少个
+      ans[i] = count(builder.toString());
+    }
+    clear();
+    return ans;
+  }
 
-	// 如果将来增加了数据量，就改大这个值
-	public static int MAXN = 2000001;
+  // 如果将来增加了数据量，就改大这个值
+  public static int MAXN = 2000001;
+  // '0' ~ '9' 10个 0~9
+  // '#' 10
+  // '-' 11，总共12个字符
+  public static int[][] tree = new int[MAXN][12];
 
-	public static int[][] tree = new int[MAXN][12];
+  public static int[] pass = new int[MAXN];
 
-	public static int[] pass = new int[MAXN];
+  public static int cnt;
 
-	public static int cnt;
+  public static void build() {
+    cnt = 1;
+  }
 
-	public static void build() {
-		cnt = 1;
-	}
+  public static int path(char cha) {
+    // 差值末尾加上#,区分
+    if (cha == '#') {
+      return 10;
+    } else if (cha == '-') {
+      return 11;
+    } else {
+      return cha - '0';
+    }
+  }
 
-	// '0' ~ '9' 10个 0~9
-	// '#' 10
-	// '-' 11
-	public static int path(char cha) {
-		if (cha == '#') {
-			return 10;
-		} else if (cha == '-') {
-			return 11;
-		} else {
-			return cha - '0';
-		}
-	}
+  public static void insert(String word) {
+    int cur = 1;
+    pass[cur]++;
+    for (int i = 0, path; i < word.length(); i++) {
+      path = path(word.charAt(i));
+      if (tree[cur][path] == 0) {
+        tree[cur][path] = ++cnt;
+      }
+      cur = tree[cur][path];
+      pass[cur]++;
+    }
+  }
 
-	public static void insert(String word) {
-		int cur = 1;
-		pass[cur]++;
-		for (int i = 0, path; i < word.length(); i++) {
-			path = path(word.charAt(i));
-			if (tree[cur][path] == 0) {
-				tree[cur][path] = ++cnt;
-			}
-			cur = tree[cur][path];
-			pass[cur]++;
-		}
-	}
+  public static int count(String pre) {
+    int cur = 1;
+    for (int i = 0, path; i < pre.length(); i++) {
+      path = path(pre.charAt(i));
+      if (tree[cur][path] == 0) {
+        return 0;
+      }
+      cur = tree[cur][path];
+    }
+    return pass[cur];
+  }
 
-	public static int count(String pre) {
-		int cur = 1;
-		for (int i = 0, path; i < pre.length(); i++) {
-			path = path(pre.charAt(i));
-			if (tree[cur][path] == 0) {
-				return 0;
-			}
-			cur = tree[cur][path];
-		}
-		return pass[cur];
-	}
-
-	public static void clear() {
-		for (int i = 1; i <= cnt; i++) {
-			Arrays.fill(tree[i], 0);
-			pass[i] = 0;
-		}
-	}
+  public static void clear() {
+    for (int i = 1; i <= cnt; i++) {
+      Arrays.fill(tree[i], 0);
+      pass[i] = 0;
+    }
+  }
 
 }
