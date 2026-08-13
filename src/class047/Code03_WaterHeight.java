@@ -71,6 +71,7 @@ public class Code03_WaterHeight {
 		br.close();
 	}
 
+	// 根据题意推断出四个位置的等差差分数组
 	public static void fall(int v, int x) {
 		set(x - 3 * v + 1, x - 2 * v, 1, v, 1);
 		set(x - 2 * v + 1, x, v - 1, -v, -1);

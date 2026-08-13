@@ -1,5 +1,5 @@
-PPT：D:\project\java\note-algorithm-zuo\ppt\算法讲解046【必备】构建前缀信息的技巧-解决子数组相关问题.pptx
-代码在该目录下：D:\project\java\note-algorithm-zuo\src\class046
+PPT：D:\project\java\note-algorithm-zuo\ppt\算法讲解048【必备】二维前缀和、二维差分、离散化技巧.pptx
+代码在该目录下：D:\project\java\note-algorithm-zuo\src\class048
 整理PPT和代码内容，整理总结，可以联网扩充内容，形成一篇md笔记：
     该笔记标题和PPT名称一致，该笔记的内容代码部分需要有代码片段示例或者图文说明
     该笔记保存地址：D:\project\java\note-algorithm-zuo\note
